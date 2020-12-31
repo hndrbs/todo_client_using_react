@@ -1,4 +1,6 @@
 import { Component } from 'react'
+import Topbar from '../components/top-bar.js'
+import TodoList from '../components/todo-list.js'
 
 class Todo extends Component {
   constructor(props) {
@@ -9,10 +11,9 @@ class Todo extends Component {
   }
   render() {
     return (
-      <div>
-        <h2>
-          this is todo page from component
-        </h2>
+      <div className="w-100">
+        <Topbar />
+        <TodoList />
       </div>
     )
   }

@@ -1,35 +1,36 @@
 import { Component } from 'react'
 import TodoCard from './todo-card'
-import server from '../config/server.js'
 
 class TodoList extends Component {
-  constructor () {
-    super()
-    this.state = {
-      todos: []
-    }
-  }
-  fetchTodos = async () => {
-    try {
-      const { data } = await server({
-        url: '/todos',
-        method: 'get',
-        headers: { token: localStorage.getItem('token') }
-      })
-      // console.log(data)
-      this.setState({ todos: data })
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  fetchTodos = () => {
+    this.props.fetchTodos()
+  } 
   componentDidMount () {
     this.fetchTodos()
+    console.log(this.props.todos)
   }
   render () {
-    const Cards = this.state.todos.map(todo => {
-      return <TodoCard todo={ todo } key={todo.id} />
+    if (!this.props.todos) {
+      return (
+        <div
+          className="bg-secondary container-fluid h-100 text-light text-center d-flex flex-column justify-content-center"
+        >
+          <h2>loading.......</h2>
+        </div>
+      )
+    }
+    const Cards = this.props.todos.map(todo => {
+      return <TodoCard
+        todo={todo}
+        key={todo.id}
+        fetchTodos={this.fetchTodos}
+      />
     })
-    return Cards
+    return (
+      <div className="row justify-content-center">
+        { Cards }
+      </div>
+    )
   }
 }
 

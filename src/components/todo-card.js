@@ -9,13 +9,13 @@ class TodoCard extends Component {
     })
   }
   render () {
-    const { id, title, description, status, due_date } = this.props.todo
+    const { title, description, due_date } = this.props.todo
     return (
       <Card className="text-center m-3 col-3 p-0">
         <TodoButtons 
-          id={ id }
-          status={ status }
+          todo={this.props.todo}
           fetchTodos={this.props.fetchTodos}
+          showForm={this.props.showForm}
         />
         <Card.Title > {title} </Card.Title>
         <Card.Body> {description} </Card.Body>

@@ -11,12 +11,17 @@ class TodoForm extends Component {
       due_date: ''
     }
   }
-  hide = () => {
-    this.props.hideHandler()
+  componentDidMount () {
+    if (this.props.init) {
+      // console.log(this.props.init)
+      const { title, description, due_date } = this.props.init
+      this.setState(() => (
+        { title, description, due_date }
+      ))
+    }
   }
-  addTodoHandler = async (event) => {
+  addTodoHandler = async () => {
     try {
-      event.preventDefault()
       await server({
         url:'/todos',
         method: 'post',
@@ -28,9 +33,26 @@ class TodoForm extends Component {
     } catch (err) {
       console.log(err.response.data)
     } finally {
-      this.props.hide()
+      this.props.hideForm()
     }
     
+  }
+  editTodoHandler = async () => {
+    try {
+      const id = this.props.init.id
+      await server({
+        url: '/todos/'+ id,
+        method: 'put',
+        data: this.state,
+        headers: { token: localStorage.getItem('token') }
+      })
+      console.log('edit oke gan')
+      this.props.fetchTodos()
+    } catch (err) {
+      console.log(err.response.data)
+    } finally {
+      this.props.hideForm()
+    }
   }
   valueCatcher = async (event) => {
     const name = event.target.name
@@ -49,14 +71,37 @@ class TodoForm extends Component {
         break;
     }
   }
+  preFillDate = (date) => {
+    if (date) {
+      date = new Date(date)
+      let newDate = +date.getDate()
+      let month = +date.getMonth() + 1
+      let year = date.getFullYear()
+      
+      newDate < 10 ? newDate = '0' + newDate : newDate = newDate
+      month < 10 ? month = '0' + month : month = month
+      
+      // console.log(`${year}-${month}-${newDate}`)
+      return `${year}-${month}-${newDate}`
+    }
+    return ''
+  }
+  submitFormHandler = (e) => {
+    e.preventDefault()
+    const submitName = this.props.submitName
+    submitName === 'Add'
+    ? this.addTodoHandler()
+    : this.editTodoHandler()
+  }
   render () {
+    const { title, description, due_date } = this.state
     return (
-      <Modal show={this.props.show} onHide={this.props.hide}>
+      <Modal show={this.props.show} onHide={this.props.hideForm}>
         <Modal.Header closeButton>
           <Modal.Title> { this.props.titleName } </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form onSubmit={this.addTodoHandler}>
+          <Form onSubmit={this.submitFormHandler}>
             <Form.Group>
               <Form.Label>Title</Form.Label>
               <Form.Control
@@ -64,6 +109,7 @@ class TodoForm extends Component {
                 type="text"
                 onChange={this.valueCatcher}
                 placeholder="todo's title here"
+                defaultValue={title}
               >
               </Form.Control>
             </Form.Group>
@@ -75,6 +121,7 @@ class TodoForm extends Component {
                 onChange={this.valueCatcher}
                 type="text"
                 placeholder="todo's description here"
+                defaultValue={description}
               >
               </Form.Control>
             </Form.Group>
@@ -85,12 +132,13 @@ class TodoForm extends Component {
                 type="date"
                 onChange={this.valueCatcher}
                 name="due_date"
+                defaultValue={this.preFillDate(due_date)}
               >
               </Form.Control>
             </Form.Group>
             <Modal.Footer>
               <Button type="submit">{ this.props.submitName }</Button>
-              <Button type="button" onClick={this.props.hide}>Cancel</Button>
+              <Button type="button" onClick={this.props.hideForm}>Cancel</Button>
             </Modal.Footer>
           </Form>
         </Modal.Body>

@@ -2,13 +2,6 @@ import { Component } from 'react'
 import TodoCard from './todo-card'
 
 class TodoList extends Component {
-  fetchTodos = () => {
-    this.props.fetchTodos()
-  } 
-  componentDidMount () {
-    this.fetchTodos()
-    console.log(this.props.todos)
-  }
   render () {
     if (!this.props.todos) {
       return (
@@ -23,7 +16,8 @@ class TodoList extends Component {
       return <TodoCard
         todo={todo}
         key={todo.id}
-        fetchTodos={this.fetchTodos}
+        fetchTodos={this.props.fetchTodos}
+        showForm={this.props.showForm}
       />
     })
     return (

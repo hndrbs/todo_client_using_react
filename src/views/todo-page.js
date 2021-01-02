@@ -4,6 +4,7 @@ import TodoList from '../components/todo-list.js'
 import server from '../config/server.js'
 import TodoForm from '../components/todo-form.js'
 import ErrorAlert from '../components/error-alert'
+import { Redirect } from 'react-router-dom'
 
 class Todo extends Component {
   constructor(props) {
@@ -16,8 +17,15 @@ class Todo extends Component {
         submitName: ''
       },
       populator: null,
-      errors: []
+      errors: [],
+      isLoggedIn: true
     }
+  }
+  logout = () => {
+    this.setState(() => {
+      localStorage.clear()
+      return { isLoggedIn: false }
+    })
   }
   showForm = (event, todo) => {
     // console.log(todo ,'ini todooo')
@@ -66,9 +74,14 @@ class Todo extends Component {
       : this.setState(() => ({ errors: [] }))
   }
   componentDidMount () {
-    this.fetchTodos()
+    localStorage.getItem('token')
+    ? this.fetchTodos()
+    : this.setState(() => ({isLoggedIn: false}))
   }
   render() {
+    if (!this.state.isLoggedIn) {
+      return <Redirect push to="/login" />
+    }
     const { titleName, submitName } = this.state.formParams
     return (
       <div className="w-100 h-100">
@@ -86,7 +99,7 @@ class Todo extends Component {
             ></TodoForm>
             : null
         }
-        <Topbar showForm={this.showForm} />
+        <Topbar showForm={this.showForm} logout={this.logout} />
         {
           this.state.errors.length 
             ? <ErrorAlert 

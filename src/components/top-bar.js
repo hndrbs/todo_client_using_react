@@ -1,28 +1,19 @@
 import { Component } from 'react'
-import  { Navbar, Button } from 'react-bootstrap'
-import { Redirect } from 'react-router-dom'
+import  { Navbar, Button, Dropdown } from 'react-bootstrap'
+import { PersonFill } from 'react-bootstrap-icons'
 class Topbar extends Component {
   constructor () {
     super()
     this.state = {
-      isTokenExist: true
+      user: ''
     }
   }
   componentDidMount () {
     localStorage.getItem('token')
-    ? this.setState({ isTokenExist: true })
-    : this.setState({ isTokenExist: false })
-  }
-  logout = () => {
-    this.setState(() => {
-      localStorage.clear()
-      return { isTokenExist: null }
-    })
+    ? this.setState({ user: localStorage.getItem('user') })
+    : this.props.logout()
   }
   render () {
-    if (!this.state.isTokenExist) {
-      return <Redirect to="/login" />
-    }
     return (
       <Navbar sticky="top" expand="sm" className="w-100 bg-light">
         <Navbar.Brand className="h1"> Todo </Navbar.Brand>
@@ -34,11 +25,25 @@ class Topbar extends Component {
             id="addForm"
             onClick={this.props.showForm}
           >Add Todo</Button>
-          <Button
-            variant="outline-danger"
-            className="ml-auto"
-            onClick={this.logout}
-          >Log Out</Button>
+          <Dropdown className="ml-auto">
+            <Dropdown.Toggle variant="dark">
+              {this.state.user} <PersonFill />
+            </Dropdown.Toggle>
+            <Dropdown.Menu
+              className="bg-transparent"
+              style={{
+                minWidth: "100%",
+                maxWidth: "100%",
+                paddingBottom: 0,
+              }}
+            >
+              <Dropdown.Item
+                className="btn btn-danger"
+                href="#"
+                onClick={this.props.logout}
+              >Log Out</Dropdown.Item>
+            </Dropdown.Menu>
+          </Dropdown>
         </Navbar.Collapse>
       </Navbar>
     )

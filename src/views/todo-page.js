@@ -3,6 +3,7 @@ import Topbar from '../components/top-bar.js'
 import TodoList from '../components/todo-list.js'
 import server from '../config/server.js'
 import TodoForm from '../components/todo-form.js'
+import ErrorAlert from '../components/error-alert'
 
 class Todo extends Component {
   constructor(props) {
@@ -14,7 +15,8 @@ class Todo extends Component {
         titleName: '',
         submitName: ''
       },
-      populator: null
+      populator: null,
+      errors: []
     }
   }
   showForm = (event, todo) => {
@@ -54,8 +56,12 @@ class Todo extends Component {
       // console.log(data)
       this.setState({ todos: data })
     } catch (err) {
-      console.log(err.response.data)
+      // console.log(err.response.data)
+      this.setErrors(err)
     }
+  }
+  setErrors = (err) => {
+    this.setState({ errors: err.response.data.errors })
   }
   componentDidMount () {
     this.fetchTodos()
@@ -73,11 +79,13 @@ class Todo extends Component {
               titleName={titleName}
               submitName={submitName}
               init={this.state.populator}
+              errorHandler={this.setErrors}
 
             ></TodoForm>
             : null
         }
         <Topbar showForm={this.showForm} />
+        <ErrorAlert errors={this.state.errors} />
         <TodoList 
           todos={this.state.todos}
           fetchTodos={this.fetchTodos}

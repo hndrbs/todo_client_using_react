@@ -2,6 +2,7 @@ import { Component } from 'react'
 import { Container, Form } from 'react-bootstrap'
 import server from '../config/server.js'
 import { Redirect } from 'react-router-dom'
+import ErrorAlert from '../components/error-alert'
 
 class Login extends Component {
   constructor () {
@@ -9,7 +10,8 @@ class Login extends Component {
     this.state = {
       email: '',
       password: '',
-      push: ''
+      push: '',
+      errors: []
     }
   }
   clearState = _ => {
@@ -46,6 +48,7 @@ class Login extends Component {
       })
     } catch (err) {
       console.log(err.response.data)
+      this.setState(() => ({ errors: err.response.data.errors }))
     }
   }
   render () {
@@ -56,6 +59,7 @@ class Login extends Component {
       <Container fluid className="d-flex flex-column justify-content-center h-100 text-center">
         <Container className="mx-auto w-75">
           <Form onSubmit={ this.login }>
+            <ErrorAlert errors={this.state.errors} />
             <span className="h4 mx-auto">
               Welcome to Todo App <br/> Please login here
             </span>
@@ -65,6 +69,7 @@ class Login extends Component {
                 type="email" placeholder="Enter your email here" 
                 name="email"
                 onChange={ this.changeState }
+                autocomplete="on"
               />
             </Form.Group>
 
@@ -74,6 +79,7 @@ class Login extends Component {
                 type="password" placeholder="Enter your email here"
                 name="password"
                 onChange={ this.changeState }
+                autocomplete="on"
               />
             </Form.Group>
             <Form.Control  

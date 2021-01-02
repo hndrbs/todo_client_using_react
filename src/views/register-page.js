@@ -2,6 +2,8 @@ import { Component } from 'react'
 import { Container, Form } from 'react-bootstrap'
 import server from '../config/server.js'
 import { Redirect } from 'react-router-dom'
+import ErrorAlert from '../components/error-alert'
+
 
 class Register extends Component {
   constructor (props) {
@@ -11,7 +13,8 @@ class Register extends Component {
       userName: '',
       email: '',
       password: '',
-      psuh: false
+      psuh: false,
+      errors: []
     }
   }
   changeState = (e) => {
@@ -46,6 +49,7 @@ class Register extends Component {
       this.toLogin()
     } catch (err) {
       console.log(err.response.data.errors)
+      this.setState({errors: err.response.data.errors})
     }
   }
   toLogin = () => {
@@ -59,6 +63,7 @@ class Register extends Component {
       <Container fluid className="d-flex flex-column justify-content-center h-100 text-center">
         <Container className="w-75 mx-auto">
           <Form onSubmit={ this.register }>
+            <ErrorAlert errors={this.state.errors} />
             <span className="h4">
               Register Here
             </span>
@@ -69,6 +74,7 @@ class Register extends Component {
                 type="text" 
                 placeholder="Enter your full name here"
                 onChange={this.changeState}
+                autoComplete="on"
               />
             </Form.Group>
 
@@ -79,6 +85,7 @@ class Register extends Component {
                 type="text" 
                 placeholder="Enter your user name here"
                 onChange={this.changeState}
+                autoComplete="on"
               />
             </Form.Group>
 
@@ -89,6 +96,7 @@ class Register extends Component {
                 type="email"
                 placeholder="Enter your email here"
                 onChange={this.changeState}
+                autoComplete="on"
               />
             </Form.Group>
 
@@ -97,8 +105,9 @@ class Register extends Component {
               <Form.Control
                 name="password"
                 type="password"
-                placeholder="Enter your email here"
+                placeholder="Enter your password here"
                 onChange={this.changeState}
+                autoComplete="on"
               />
             </Form.Group>
             <Form.Control

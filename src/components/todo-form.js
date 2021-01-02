@@ -32,6 +32,7 @@ class TodoForm extends Component {
       this.props.fetchTodos()
     } catch (err) {
       console.log(err.response.data)
+      this.props.errorHandler(err)
     } finally {
       this.props.hideForm()
     }
@@ -50,6 +51,7 @@ class TodoForm extends Component {
       this.props.fetchTodos()
     } catch (err) {
       console.log(err.response.data)
+      this.props.errorHandler(err)
     } finally {
       this.props.hideForm()
     }
@@ -78,8 +80,8 @@ class TodoForm extends Component {
       let month = +date.getMonth() + 1
       let year = date.getFullYear()
       
-      newDate < 10 ? newDate = '0' + newDate : newDate = newDate
-      month < 10 ? month = '0' + month : month = month
+      newDate < 10 ? newDate = '0' + newDate : newDate = newDate + 0
+      month < 10 ? month = '0' + month : month = month + 0
       
       // console.log(`${year}-${month}-${newDate}`)
       return `${year}-${month}-${newDate}`

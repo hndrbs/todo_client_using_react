@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import { Container, Form } from 'react-bootstrap'
 import server from '../config/server.js'
+import { Redirect } from 'react-router-dom'
 
 class Register extends Component {
   constructor (props) {
@@ -9,7 +10,8 @@ class Register extends Component {
       fullName: '',
       userName: '',
       email: '',
-      password: ''
+      password: '',
+      psuh: false
     }
   }
   changeState = (e) => {
@@ -41,17 +43,18 @@ class Register extends Component {
         data: this.state
       })
       console.log('oke')
-      this.setState({
-        fullName: '',
-        userName: '',
-        email: '',
-        password: ''
-      })
+      this.toLogin()
     } catch (err) {
       console.log(err.response.data.errors)
     }
   }
+  toLogin = () => {
+    this.setState({ push: true })
+  }
   render () {
+    if (this.state.push) {
+      return <Redirect to="/login"/>
+    }
     return (
       <Container fluid className="d-flex flex-column justify-content-center h-100 text-center">
         <Container className="w-75 mx-auto">
@@ -104,6 +107,15 @@ class Register extends Component {
               value="Register"
             />
           </Form>
+        </Container>
+        <Container className="mt-3">
+          <span className="h5">Hava an account already ? </span>
+          <span className="h5">
+            Login 
+            <a href="#" onClick={ this.toLogin } className="mx-2">
+              here
+            </a>
+          </span>
         </Container>
       </Container>
     )

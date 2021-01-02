@@ -1,13 +1,15 @@
 import { Component } from 'react'
 import { Container, Form } from 'react-bootstrap'
 import server from '../config/server.js'
+import { Redirect } from 'react-router-dom'
 
 class Login extends Component {
   constructor () {
     super ()
     this.state = {
       email: '',
-      password: ''
+      password: '',
+      push: ''
     }
   }
   clearState = _ => {
@@ -24,22 +26,32 @@ class Login extends Component {
       this.setState({ password: value })
     }
   }
+  toRegister = () => {
+    this.setState({ push: '/register' })
+  }
   login = async (e) => {
     e.preventDefault()
     try {
+      const { email, password } = this.state
       const { data } = await server({
         url: '/login',
         method: 'post',
-        data: this.state
+        data: { email, password }
       })
       // console.log(data)
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user', data.userName)
+      this.setState(() => {
+        localStorage.setItem('token', data.token)
+        localStorage.setItem('user', data.userName)
+        return { push: '/' }
+      })
     } catch (err) {
       console.log(err.response.data)
     }
   }
   render () {
+    if (this.state.push) {
+      return <Redirect to={this.state.push} /> 
+    }
     return (
       <Container fluid className="d-flex flex-column justify-content-center h-100 text-center">
         <Container className="mx-auto w-75">
@@ -70,6 +82,16 @@ class Login extends Component {
               value="Login" 
             />
           </Form>
+        </Container>
+        <Container className="mt-3">
+          <span className="h5">Do not have an account yet?</span>
+          <span className="h5"> create one 
+            <a
+            href="#"
+            onClick={this.toRegister}
+            className="badge badge-success mx-2"
+            >here</a>
+          </span>
         </Container>
       </Container>
     )

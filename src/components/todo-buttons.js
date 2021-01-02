@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { CheckCircle, XSquare, Pencil, Circle } from 'react-bootstrap-icons'
-import { Button, Card } from 'react-bootstrap'
+import { Button, Card, Tooltip, OverlayTrigger } from 'react-bootstrap'
 import server from '../config/server.js'
 
 class TodoButtons extends Component {
@@ -36,7 +36,7 @@ class TodoButtons extends Component {
     }
   }
   render () {
-    const { status }= this.props.todo
+    const { id, status }= this.props.todo
     let StatusBtn = Circle
     let color = "green"
     if (status === 'done') {
@@ -45,19 +45,43 @@ class TodoButtons extends Component {
     }
     return (
       <Card.Header className="d-flex justify-content-between w-100">
-        <Button variant="outer-dark" onClick={this.changeStatus}>
-          <StatusBtn color={ color } size={"1.5rem"}/>
-        </Button>
-        
-        <Button 
-          variant="outer-dark"
-          onClick={e => this.props.showForm(e, this.props.todo)}
+        <OverlayTrigger
+          overlay={
+            <Tooltip id={ 'status-'+ id}>
+              change status this todo
+            </Tooltip>
+          }
         >
-          <Pencil color="blue" size={"1.5rem"}/>
-        </Button>
-        <Button variant="outer-danger" onClick={this.deleteTodo}>
-          <XSquare color="red" size={"1.5rem"}/>
-        </Button>
+          <Button variant="outer-dark" onClick={this.changeStatus}>
+            <StatusBtn color={ color } size={"1.5rem"}/>
+          </Button>
+        </OverlayTrigger>
+
+        <OverlayTrigger
+          overlay={
+            <Tooltip id={'edit-' + id}>
+              edit this todo
+            </Tooltip>
+          }
+        >
+          <Button
+            variant="outer-dark"
+            onClick={e => this.props.showForm(e, this.props.todo)}
+          >
+            <Pencil color="blue" size={"1.5rem"} />
+          </Button>
+        </OverlayTrigger>
+        <OverlayTrigger
+          overlay={
+            <Tooltip id={'delete-' + id}>
+              delete this todo
+            </Tooltip>
+          }
+        >
+          <Button variant="outer-danger" onClick={this.deleteTodo}>
+            <XSquare color="red" size={"1.5rem"}/>
+          </Button>
+        </OverlayTrigger>
       </Card.Header>      
     ) 
   }

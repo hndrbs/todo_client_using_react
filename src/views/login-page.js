@@ -14,6 +14,11 @@ class Login extends Component {
       errors: []
     }
   }
+  setErrors = (err) => {
+    err
+      ? this.setState(() => ({ errors: err.response.data.errors }))
+      : this.setState(() => ({ errors: [] }))
+  }
   clearState = _ => {
     this.setState({
       email: '',
@@ -58,8 +63,15 @@ class Login extends Component {
     return (
       <Container fluid className="d-flex flex-column justify-content-center h-100 text-center">
         <Container className="mx-auto w-75">
+          {
+            this.state.errors.length
+              ? <ErrorAlert
+                errors={this.state.errors}
+                close={this.setErrors}
+              />
+              : null
+          }
           <Form onSubmit={ this.login }>
-            <ErrorAlert errors={this.state.errors} />
             <span className="h4 mx-auto">
               Welcome to Todo App <br/> Please login here
             </span>

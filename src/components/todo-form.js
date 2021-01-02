@@ -56,9 +56,10 @@ class TodoForm extends Component {
       this.props.hideForm()
     }
   }
-  valueCatcher = async (event) => {
+  valueCatcher = (event) => {
     const name = event.target.name
     const value = event.target.value
+    console.log(name, value)
     switch (name) {
       case 'title':
         this.setState({ title: value })

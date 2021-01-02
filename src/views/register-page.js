@@ -55,6 +55,11 @@ class Register extends Component {
   toLogin = () => {
     this.setState({ push: true })
   }
+  setErrors = (err) => {
+    err
+      ? this.setState(() => ({ errors: err.response.data.errors }))
+      : this.setState(() => ({ errors: [] }))
+  }
   render () {
     if (this.state.push) {
       return <Redirect to="/login"/>
@@ -62,8 +67,15 @@ class Register extends Component {
     return (
       <Container fluid className="d-flex flex-column justify-content-center h-100 text-center">
         <Container className="w-75 mx-auto">
+          {
+            this.state.errors.length
+              ? <ErrorAlert
+                errors={this.state.errors}
+                close={this.setErrors}
+              />
+              : null
+          }
           <Form onSubmit={ this.register }>
-            <ErrorAlert errors={this.state.errors} />
             <span className="h4">
               Register Here
             </span>

@@ -2,29 +2,23 @@ import { Component } from 'react'
 import { Alert } from 'react-bootstrap'
 
 class ErrorAlert extends Component {
-  constructor () {
-    super()
-    this.state = {
-      hide: false
-    }
-  }
-  hideHandler = (e) => {
-    console.log(e)
+  hideHandler = () => {
+    // console.log(e)
     // console.log('ini error alert hide')
-    this.setState({ hide: true })
+    this.props.close()
   }
   render () {
     const  errors  = this.props.errors
-    if (!errors.length || this.state.hide) {
-      return <></>
-    }
     let ShownError = []
     ShownError = errors.map((err, idx) => {
-      return <p key={idx}>{err}</p>
+      return <h5 key={idx} className="m-1">{err}</h5>
     })
     return (
-      <Alert dismissible variant="danger" onClose={this.hideHandler}>
-        <Alert.Heading className="h5">Ooops, error(s) just happened </Alert.Heading>
+      <Alert dismissible 
+        variant="danger" 
+        onClose={this.hideHandler} 
+        className="text-center"
+      >
         { ShownError }
       </Alert>
     )

@@ -61,7 +61,9 @@ class Todo extends Component {
     }
   }
   setErrors = (err) => {
-    this.setState({ errors: err.response.data.errors })
+    err 
+      ? this.setState(() => ({ errors: err.response.data.errors }))
+      : this.setState(() => ({ errors: [] }))
   }
   componentDidMount () {
     this.fetchTodos()
@@ -85,7 +87,14 @@ class Todo extends Component {
             : null
         }
         <Topbar showForm={this.showForm} />
-        <ErrorAlert errors={this.state.errors} />
+        {
+          this.state.errors.length 
+            ? <ErrorAlert 
+                errors={this.state.errors}
+                close={this.setErrors}
+              />
+            : null
+        }
         <TodoList 
           todos={this.state.todos}
           fetchTodos={this.fetchTodos}

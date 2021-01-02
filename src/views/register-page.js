@@ -4,7 +4,6 @@ import server from '../config/server.js'
 import { Redirect } from 'react-router-dom'
 import ErrorAlert from '../components/error-alert'
 
-
 class Register extends Component {
   constructor (props) {
     super(props)
@@ -14,7 +13,8 @@ class Register extends Component {
       email: '',
       password: '',
       psuh: false,
-      errors: []
+      errors: [],
+      success: false
     }
   }
   changeState = (e) => {
@@ -45,7 +45,11 @@ class Register extends Component {
         method: 'post',
         data: this.state
       })
-      console.log('oke')
+      // console.log('oke')
+      await this.setState({ success: true})
+      setTimeout(() => {
+        this.setState({success: false})
+      }, 1500)
       this.toLogin()
     } catch (err) {
       console.log(err.response.data.errors)

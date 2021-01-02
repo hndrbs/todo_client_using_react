@@ -81,7 +81,7 @@ class Login extends Component {
                 type="email" placeholder="Enter your email here" 
                 name="email"
                 onChange={ this.changeState }
-                autocomplete="on"
+                autoComplete="on"
               />
             </Form.Group>
 
@@ -91,7 +91,7 @@ class Login extends Component {
                 type="password" placeholder="Enter your email here"
                 name="password"
                 onChange={ this.changeState }
-                autocomplete="on"
+                autoComplete="on"
               />
             </Form.Group>
             <Form.Control  
